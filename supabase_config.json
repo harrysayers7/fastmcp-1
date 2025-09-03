@@ -14,7 +14,12 @@
         "auto_generate_types": true,
         "auto_generate_docs": true
       },
-      "tables": [],
+      "tables": [
+        "gitops_operations",
+        "git_commits",
+        "deployments", 
+        "system_health_checks"
+      ],
       "demo_schema": {
         "name": "gitops_demo",
         "tables": [
