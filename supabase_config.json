@@ -14,17 +14,7 @@
         "auto_generate_types": true,
         "auto_generate_docs": true
       },
-      "tables": [
-        "projects",
-        "project_members", 
-        "environments",
-        "items",
-        "infra_servers",
-        "infra_services",
-        "env_vars_map",
-        "infra_credentials",
-        "inbound_api_keys"
-      ],
+      "tables": [],
       "demo_schema": {
         "name": "gitops_demo",
         "tables": [
@@ -32,7 +22,7 @@
           "authors", 
           "comments"
         ],
-        "description": "Demo schema for GitOps + Supabase MCP integration"
+        "description": "Demo schema for GitOps + Supabase MCP integration - Primary schema for testing and development"
       }
     },
     "SSoT": {
