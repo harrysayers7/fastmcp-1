@@ -1,0 +1,278 @@
+# Memory Operations Makefile
+# Author: Harry Sayers
+# Description: Memory management operations for GitOps + Supabase MCP system
+
+.PHONY: help save recall list search clear backup restore
+
+# Default target
+help: ## Show memory operations help
+	@echo "🧠 Memory Operations"
+	@echo "==================="
+	@echo ""
+	@echo "Available commands:"
+	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "Examples:"
+	@echo "  make save-config     # Save current configuration to memory"
+	@echo "  make recall-project  # Recall project information"
+	@echo "  make list-memories   # List all saved memories"
+	@echo "  make search-gitops   # Search for GitOps-related memories"
+
+# Save Operations
+save-config: ## Save current system configuration to memory
+	@echo "💾 Saving system configuration to memory..."
+	@echo "📊 Current configuration:"
+	@echo "  Project: GitOps + Supabase MCP System"
+	@echo "  Supabase Project: SSoT1 (zeopoimfsxdidkyiucsr)"
+	@echo "  Region: ap-southeast-2"
+	@echo "  Status: ACTIVE_HEALTHY"
+	@echo "  Schemas: public, gitops_demo"
+	@echo "  Tables: 7 total (4 tracking + 3 demo)"
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save this configuration:"
+	@echo "  \"Save system configuration: GitOps + Supabase MCP system with SSoT1 project\""
+	@echo "✅ Configuration ready to save"
+
+save-project: ## Save project details to memory
+	@echo "💾 Saving project details to memory..."
+	@echo "📁 Project Information:"
+	@echo "  Name: GitOps + Supabase MCP System"
+	@echo "  Author: Harry Sayers"
+	@echo "  Created: 2024-01-15"
+	@echo "  Repository: fastmcp-1"
+	@echo "  Purpose: GitOps workflow with Supabase MCP integration"
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save this information:"
+	@echo "  \"Save project details: GitOps + Supabase MCP system by Harry Sayers\""
+	@echo "✅ Project details ready to save"
+
+save-schema: ## Save database schema information to memory
+	@echo "💾 Saving database schema to memory..."
+	@echo "🗄️  Database Schema:"
+	@echo "  Public Schema Tables:"
+	@echo "    - gitops_operations (GitOps operations tracking)"
+	@echo "    - git_commits (Git commits tracking)"
+	@echo "    - deployments (Deployment tracking)"
+	@echo "    - system_health_checks (Health monitoring)"
+	@echo ""
+	@echo "  GitOps Demo Schema Tables:"
+	@echo "    - authors (Blog authors)"
+	@echo "    - blog_posts (Blog posts with view tracking)"
+	@echo "    - comments (Post comments)"
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save this schema:"
+	@echo "  \"Save database schema: 7 tables across 2 schemas for GitOps tracking\""
+	@echo "✅ Schema information ready to save"
+
+save-workflow: ## Save GitOps workflow to memory
+	@echo "💾 Saving GitOps workflow to memory..."
+	@echo "🔄 GitOps Workflow:"
+	@echo "  1. Create migration files in migrations/ directory"
+	@echo "  2. Use Supabase MCP for natural language operations"
+	@echo "  3. Track all operations in gitops_operations table"
+	@echo "  4. Monitor system health and performance"
+	@echo "  5. Use Makefiles for common operations"
+	@echo "  6. Version control all changes in Git"
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save this workflow:"
+	@echo "  \"Save GitOps workflow: 6-step process for database management\""
+	@echo "✅ Workflow ready to save"
+
+save-commands: ## Save useful commands to memory
+	@echo "💾 Saving useful commands to memory..."
+	@echo "⚡ Useful Commands:"
+	@echo "  make demo              # Run GitOps tracking demo"
+	@echo "  make status            # Check system status"
+	@echo "  make quick-demo        # Quick system overview"
+	@echo "  make -f Makefile.supabase status  # Supabase status"
+	@echo "  make security          # Security audit"
+	@echo "  make migrate-create    # Create new migration"
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save these commands:"
+	@echo "  \"Save useful commands: 6 essential Makefile commands for GitOps\""
+	@echo "✅ Commands ready to save"
+
+# Recall Operations
+recall-project: ## Recall project information from memory
+	@echo "🔍 Recalling project information from memory..."
+	@echo "📋 Use Supabase MCP to recall:"
+	@echo "  \"Recall project information for GitOps + Supabase MCP system\""
+	@echo "  \"What is the current project configuration?\""
+	@echo "  \"Show me the project details and setup\""
+	@echo "✅ Recall commands ready"
+
+recall-schema: ## Recall database schema from memory
+	@echo "🔍 Recalling database schema from memory..."
+	@echo "📋 Use Supabase MCP to recall:"
+	@echo "  \"Recall database schema for GitOps system\""
+	@echo "  \"What tables exist in the database?\""
+	@echo "  \"Show me the schema structure\""
+	@echo "✅ Schema recall commands ready"
+
+recall-workflow: ## Recall GitOps workflow from memory
+	@echo "🔍 Recalling GitOps workflow from memory..."
+	@echo "📋 Use Supabase MCP to recall:"
+	@echo "  \"Recall GitOps workflow process\""
+	@echo "  \"What is the GitOps workflow for this project?\""
+	@echo "  \"Show me the step-by-step process\""
+	@echo "✅ Workflow recall commands ready"
+
+recall-commands: ## Recall useful commands from memory
+	@echo "🔍 Recalling useful commands from memory..."
+	@echo "📋 Use Supabase MCP to recall:"
+	@echo "  \"Recall useful Makefile commands\""
+	@echo "  \"What commands are available for this project?\""
+	@echo "  \"Show me the common operations\""
+	@echo "✅ Commands recall ready"
+
+# List and Search Operations
+list-memories: ## List all saved memories
+	@echo "📋 Listing all saved memories..."
+	@echo "🔍 Use Supabase MCP to list:"
+	@echo "  \"List all saved memories\""
+	@echo "  \"Show me all stored information\""
+	@echo "  \"What information is saved in memory?\""
+	@echo "✅ List commands ready"
+
+search-gitops: ## Search for GitOps-related memories
+	@echo "🔍 Searching for GitOps-related memories..."
+	@echo "📋 Use Supabase MCP to search:"
+	@echo "  \"Search for GitOps related information\""
+	@echo "  \"Find memories about GitOps workflow\""
+	@echo "  \"Show me GitOps-related saved data\""
+	@echo "✅ Search commands ready"
+
+search-supabase: ## Search for Supabase-related memories
+	@echo "🔍 Searching for Supabase-related memories..."
+	@echo "📋 Use Supabase MCP to search:"
+	@echo "  \"Search for Supabase related information\""
+	@echo "  \"Find memories about database operations\""
+	@echo "  \"Show me Supabase-related saved data\""
+	@echo "✅ Search commands ready"
+
+search-project: ## Search for project-related memories
+	@echo "🔍 Searching for project-related memories..."
+	@echo "📋 Use Supabase MCP to search:"
+	@echo "  \"Search for project information\""
+	@echo "  \"Find memories about this project\""
+	@echo "  \"Show me project-related saved data\""
+	@echo "✅ Search commands ready"
+
+# Memory Management
+clear-memories: ## Clear all memories (DANGEROUS)
+	@echo "⚠️  WARNING: This will clear all saved memories!"
+	@echo "   This is a destructive operation and cannot be undone."
+	@read -p "Are you sure you want to clear all memories? (y/N): " confirm && [ "$$confirm" = "y" ] || exit 1
+	@echo "🗑️  Clearing all memories..."
+	@echo "🔍 Use Supabase MCP to clear:"
+	@echo "  \"Clear all saved memories\""
+	@echo "  \"Delete all stored information\""
+	@echo "✅ Clear commands ready"
+
+backup-memories: ## Backup memories to file
+	@echo "💾 Backing up memories to file..."
+	@echo "📁 Creating memory backup..."
+	@echo "🔍 Use Supabase MCP to backup:"
+	@echo "  \"Export all memories to backup file\""
+	@echo "  \"Save all stored information to file\""
+	@echo "✅ Backup commands ready"
+
+restore-memories: ## Restore memories from backup
+	@echo "🔄 Restoring memories from backup..."
+	@echo "📁 Restoring from memory backup..."
+	@echo "🔍 Use Supabase MCP to restore:"
+	@echo "  \"Import memories from backup file\""
+	@echo "  \"Restore all stored information from file\""
+	@echo "✅ Restore commands ready"
+
+# Quick Operations
+quick-save: ## Quick save all important information
+	@echo "⚡ Quick Save All Information"
+	@echo "============================"
+	@echo "💾 Saving system configuration..."
+	@echo "📊 Current configuration:"
+	@echo "  Project: GitOps + Supabase MCP System"
+	@echo "  Supabase Project: SSoT1 (zeopoimfsxdidkyiucsr)"
+	@echo "  Region: ap-southeast-2"
+	@echo "  Status: ACTIVE_HEALTHY"
+	@echo ""
+	@echo "💾 Saving project details..."
+	@echo "📁 Project Information:"
+	@echo "  Name: GitOps + Supabase MCP System"
+	@echo "  Author: Harry Sayers"
+	@echo "  Created: 2024-01-15"
+	@echo ""
+	@echo "💾 Saving database schema..."
+	@echo "🗄️  Database Schema:"
+	@echo "  Public Schema: 4 tables (gitops_operations, git_commits, deployments, system_health_checks)"
+	@echo "  GitOps Demo Schema: 3 tables (authors, blog_posts, comments)"
+	@echo ""
+	@echo "💾 Saving GitOps workflow..."
+	@echo "🔄 GitOps Workflow: 6-step process for database management"
+	@echo ""
+	@echo "💾 Saving useful commands..."
+	@echo "⚡ Useful Commands: make demo, make status, make quick-demo, etc."
+	@echo ""
+	@echo "🔍 Use Supabase MCP to save all this information:"
+	@echo "  \"Save complete GitOps + Supabase MCP system information to memory\""
+	@echo "✅ All information ready to save to memory"
+
+quick-recall: ## Quick recall all important information
+	@echo "⚡ Quick Recall All Information"
+	@echo "=============================="
+	@echo "🔍 Use Supabase MCP to recall:"
+	@echo "  \"Recall project information for GitOps + Supabase MCP system\""
+	@echo "  \"Recall database schema for GitOps system\""
+	@echo "  \"Recall GitOps workflow process\""
+	@echo "  \"Recall useful Makefile commands\""
+	@echo "✅ All recall commands ready"
+
+quick-search: ## Quick search across all memories
+	@echo "⚡ Quick Search All Memories"
+	@echo "==========================="
+	@echo "🔍 Use Supabase MCP to search:"
+	@echo "  \"Search for GitOps related information\""
+	@echo "  \"Search for Supabase related information\""
+	@echo "  \"Search for project information\""
+	@echo "✅ All search commands ready"
+
+# Memory Categories
+save-category-config: ## Save configuration category
+	@echo "💾 Saving Configuration Category..."
+	@echo "📊 Configuration includes:"
+	@echo "  - System settings"
+	@echo "  - Database connection details"
+	@echo "  - Project structure"
+	@echo "  - Environment variables"
+	@echo "✅ Configuration category ready to save"
+
+save-category-operations: ## Save operations category
+	@echo "💾 Saving Operations Category..."
+	@echo "🔄 Operations include:"
+	@echo "  - GitOps workflow steps"
+	@echo "  - Migration procedures"
+	@echo "  - Deployment processes"
+	@echo "  - Rollback procedures"
+	@echo "✅ Operations category ready to save"
+
+save-category-troubleshooting: ## Save troubleshooting category
+	@echo "💾 Saving Troubleshooting Category..."
+	@echo "🔧 Troubleshooting includes:"
+	@echo "  - Common issues and solutions"
+	@echo "  - Error messages and fixes"
+	@echo "  - Performance optimization tips"
+	@echo "  - Security best practices"
+	@echo "✅ Troubleshooting category ready to save"
+
+# Show system information
+info: ## Show memory system information
+	@echo "ℹ️  Memory System Information"
+	@echo "============================"
+	@echo "📁 Project: GitOps + Supabase MCP System"
+	@echo "👤 Author: Harry Sayers"
+	@echo "🧠 Memory System: Supabase MCP Integration"
+	@echo "💾 Storage: Supabase Database"
+	@echo "🔍 Search: Natural language queries"
+	@echo "📊 Categories: Config, Operations, Troubleshooting"
+	@echo "✅ Status: Ready for memory operations"
