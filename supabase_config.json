@@ -1,0 +1,67 @@
+{
+  "projects": {
+    "SSoT1": {
+      "id": "zeopoimfsxdidkyiucsr",
+      "region": "ap-southeast-2",
+      "status": "ACTIVE_HEALTHY",
+      "database": {
+        "host": "db.zeopoimfsxdidkyiucsr.supabase.co",
+        "version": "17.4.1.075"
+      },
+      "gitops": {
+        "migration_path": "migrations/",
+        "schema_docs_path": "docs/schema/",
+        "auto_generate_types": true,
+        "auto_generate_docs": true
+      },
+      "tables": [
+        "projects",
+        "project_members", 
+        "environments",
+        "items",
+        "infra_servers",
+        "infra_services",
+        "env_vars_map",
+        "infra_credentials",
+        "inbound_api_keys"
+      ],
+      "demo_schema": {
+        "name": "gitops_demo",
+        "tables": [
+          "blog_posts",
+          "authors", 
+          "comments"
+        ],
+        "description": "Demo schema for GitOps + Supabase MCP integration"
+      }
+    },
+    "SSoT": {
+      "id": "hzttajuyxmjteyvyzlxs",
+      "region": "ap-southeast-2", 
+      "status": "ACTIVE_HEALTHY",
+      "database": {
+        "host": "db.hzttajuyxmjteyvyzlxs.supabase.co",
+        "version": "17.4.1.075"
+      },
+      "gitops": {
+        "migration_path": "migrations/",
+        "schema_docs_path": "docs/schema/",
+        "auto_generate_types": true,
+        "auto_generate_docs": true
+      }
+    }
+  },
+  "gitops": {
+    "default_project": "SSoT1",
+    "migration_template": "migrations/template.sql",
+    "auto_commit": false,
+    "require_review": true,
+    "security_checks": true
+  },
+  "automation": {
+    "sync_on_push": true,
+    "generate_docs_on_schema_change": true,
+    "validate_migrations": true,
+    "security_audit": true
+  }
+}
