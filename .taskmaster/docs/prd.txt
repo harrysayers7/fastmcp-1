@@ -1,0 +1,112 @@
+# SSoT Development Database - Product Requirements Document
+
+## Project Overview
+Create a centralized Single Source of Truth (SSoT) database using Supabase to store development metadata, configuration templates, and project information that Cursor AI can access when creating new projects. This will serve as a development knowledge base and configuration management system.
+
+## Core Objectives
+- Centralize development metadata and configuration templates
+- Provide Cursor AI with contextual information for new project creation
+- Store non-sensitive development data (server details, API endpoints, project templates)
+- Enable quick project setup with pre-configured templates
+- Track project relationships and dependencies
+- Maintain development best practices and standards
+
+## Key Features
+
+### 1. Project Templates & Configurations
+- Store common project templates (React, Node.js, Python, etc.)
+- Configuration files (.env templates, package.json templates, etc.)
+- Docker configurations and deployment scripts
+- CI/CD pipeline templates
+- Database schema templates
+
+### 2. Infrastructure & Server Management
+- Server details (hostnames, regions, environments)
+- API endpoint configurations
+- Service discovery information
+- Load balancer configurations
+- CDN and static asset configurations
+
+### 3. Development Environment Data
+- Development tool configurations
+- IDE settings and extensions
+- Linting and formatting rules
+- Testing framework configurations
+- Build tool configurations
+
+### 4. API & Integration Management
+- API documentation and schemas
+- Third-party service configurations (non-sensitive)
+- Webhook endpoints and configurations
+- Integration patterns and examples
+- Rate limiting and authentication patterns
+
+### 5. Project Metadata & Relationships
+- Project descriptions and purposes
+- Technology stack information
+- Dependencies between projects
+- Version information and release notes
+- Team assignments and responsibilities
+
+### 6. Development Standards & Best Practices
+- Coding standards and conventions
+- Security best practices
+- Performance optimization guidelines
+- Documentation templates
+- Review and deployment processes
+
+## Technical Requirements
+
+### Database Schema Design
+- Use Supabase PostgreSQL with proper indexing
+- Implement Row Level Security (RLS) for data protection
+- Create relationships between different data types
+- Support for JSON/JSONB fields for flexible configuration storage
+- Audit trails for configuration changes
+
+### Security Considerations
+- No sensitive data (API keys, passwords, tokens)
+- Only store public endpoints and non-sensitive configurations
+- Implement proper access controls
+- Regular security audits and data cleanup
+
+### Integration Requirements
+- MCP server integration for Cursor AI access
+- REST API for programmatic access
+- Export/import functionality for configurations
+- Version control integration for template changes
+
+## Success Metrics
+- Reduced project setup time by 50%
+- Consistent project configurations across team
+- Improved development workflow efficiency
+- Better knowledge sharing and onboarding
+- Reduced configuration errors and inconsistencies
+
+## Implementation Phases
+
+### Phase 1: Core Schema & Basic Templates
+- Set up Supabase project and basic schema
+- Create core tables for projects, templates, and configurations
+- Implement basic CRUD operations
+- Add common project templates
+
+### Phase 2: Advanced Features
+- Add relationship management between projects
+- Implement search and filtering capabilities
+- Add version control for templates
+- Create API endpoints for external access
+
+### Phase 3: AI Integration & Automation
+- Integrate with Cursor AI via MCP
+- Add intelligent template suggestions
+- Implement automated project setup workflows
+- Add analytics and usage tracking
+
+## Technology Stack
+- **Database**: Supabase PostgreSQL
+- **API**: Supabase REST API + Edge Functions
+- **Authentication**: Supabase Auth
+- **Integration**: MCP Server for Cursor AI
+- **Frontend**: Optional admin dashboard (future consideration)
+- **Version Control**: Git integration for template management

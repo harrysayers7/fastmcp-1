@@ -1,0 +1,377 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Investigate GitHub Tool Failures",
+        "description": "Debug and identify the root causes of GitHub tool failures in the chat-ai application",
+        "details": "Set up a debugging environment to trace GitHub tool operations. Check for:\n1. API connection issues (timeouts, failed requests)\n2. Authentication problems (expired tokens, permission issues)\n3. MCP server configuration errors\n4. Log analysis for error patterns\n5. Network connectivity between chat-ai and GitHub API\n\nImplementation steps:\n- Enable verbose logging for GitHub operations\n- Create test scripts to isolate failing components\n- Review recent changes that might have affected GitHub functionality\n- Document all findings in a comprehensive report with specific error codes and stack traces",
+        "testStrategy": "Create a test harness that exercises each GitHub operation independently. Compare results with expected behavior. Document all failures with detailed error information. Use mock GitHub responses to validate error handling.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Fix GitHub Authentication and MCP Integration",
+        "description": "Implement fixes for GitHub API authentication and ensure proper MCP server configuration",
+        "details": "Based on investigation findings, implement authentication fixes:\n1. Update token management system to handle token refresh\n2. Verify OAuth flow is working correctly\n3. Configure MCP server for GitHub API access:\n   - Update endpoint configurations\n   - Set proper request timeouts\n   - Configure rate limiting handling\n4. Implement token validation before operations\n5. Add secure storage for GitHub credentials\n\nCode implementation should include:\n```javascript\nclass GitHubAuthManager {\n  constructor(config) {\n    this.tokenStore = new SecureTokenStore();\n    this.apiEndpoint = config.githubApiEndpoint;\n    this.mcpConfig = config.mcpServerConfig;\n  }\n  \n  async validateToken(token) {\n    // Token validation logic\n  }\n  \n  async refreshToken(refreshToken) {\n    // Token refresh logic\n  }\n}\n```",
+        "testStrategy": "Create unit tests for authentication flow. Test token validation, refresh, and error scenarios. Verify MCP server configuration with integration tests. Simulate expired tokens and API rate limiting to ensure proper handling.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Repository Access Functionality",
+        "description": "Restore the ability for users to list and access GitHub repositories through the chat-ai interface",
+        "details": "Implement repository access operations:\n1. List user repositories\n2. Access repository details\n3. Browse repository structure\n4. View repository metadata\n\nImplementation should include:\n```javascript\nclass GitHubRepositoryManager {\n  constructor(authManager) {\n    this.authManager = authManager;\n    this.apiClient = new GitHubApiClient(authManager);\n  }\n  \n  async listRepositories(username, options = {}) {\n    const endpoint = `/users/${username}/repos`;\n    return this.apiClient.get(endpoint, options);\n  }\n  \n  async getRepositoryDetails(owner, repo) {\n    const endpoint = `/repos/${owner}/${repo}`;\n    return this.apiClient.get(endpoint);\n  }\n  \n  async getRepositoryContents(owner, repo, path = '') {\n    const endpoint = `/repos/${owner}/${repo}/contents/${path}`;\n    return this.apiClient.get(endpoint);\n  }\n}\n```\n\nEnsure proper error handling for repository not found, access denied, and API rate limiting scenarios.",
+        "testStrategy": "Test repository listing with various user accounts. Verify repository details retrieval works for public and private repositories. Test error cases like non-existent repositories and permission issues. Validate content browsing functionality.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Issue Management Functionality",
+        "description": "Restore CRUD operations for GitHub issues through the chat-ai interface",
+        "details": "Implement issue management operations:\n1. Create new issues\n2. List issues with filtering options\n3. Update existing issues\n4. Close/reopen issues\n5. Add comments to issues\n\nImplementation should include:\n```javascript\nclass GitHubIssueManager {\n  constructor(authManager) {\n    this.authManager = authManager;\n    this.apiClient = new GitHubApiClient(authManager);\n  }\n  \n  async createIssue(owner, repo, issueData) {\n    const endpoint = `/repos/${owner}/${repo}/issues`;\n    return this.apiClient.post(endpoint, issueData);\n  }\n  \n  async listIssues(owner, repo, options = {}) {\n    const endpoint = `/repos/${owner}/${repo}/issues`;\n    return this.apiClient.get(endpoint, options);\n  }\n  \n  async updateIssue(owner, repo, issueNumber, updateData) {\n    const endpoint = `/repos/${owner}/${repo}/issues/${issueNumber}`;\n    return this.apiClient.patch(endpoint, updateData);\n  }\n  \n  async addComment(owner, repo, issueNumber, comment) {\n    const endpoint = `/repos/${owner}/${repo}/issues/${issueNumber}/comments`;\n    return this.apiClient.post(endpoint, { body: comment });\n  }\n}\n```\n\nImplement proper validation for issue data and handle API-specific error responses.",
+        "testStrategy": "Create unit tests for each issue operation. Test issue creation with various fields. Verify issue listing with different filter options. Test update operations and comment functionality. Validate error handling for invalid inputs and API errors.",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Pull Request Operations",
+        "description": "Restore functionality to create, list, and manage pull requests through the chat-ai interface",
+        "details": "Implement pull request operations:\n1. Create new pull requests\n2. List pull requests with filtering\n3. Get pull request details\n4. Update pull request status\n5. Merge pull requests\n\nImplementation should include:\n```javascript\nclass GitHubPullRequestManager {\n  constructor(authManager) {\n    this.authManager = authManager;\n    this.apiClient = new GitHubApiClient(authManager);\n  }\n  \n  async createPullRequest(owner, repo, prData) {\n    const endpoint = `/repos/${owner}/${repo}/pulls`;\n    return this.apiClient.post(endpoint, prData);\n  }\n  \n  async listPullRequests(owner, repo, options = {}) {\n    const endpoint = `/repos/${owner}/${repo}/pulls`;\n    return this.apiClient.get(endpoint, options);\n  }\n  \n  async getPullRequestDetails(owner, repo, pullNumber) {\n    const endpoint = `/repos/${owner}/${repo}/pulls/${pullNumber}`;\n    return this.apiClient.get(endpoint);\n  }\n  \n  async mergePullRequest(owner, repo, pullNumber, mergeOptions = {}) {\n    const endpoint = `/repos/${owner}/${repo}/pulls/${pullNumber}/merge`;\n    return this.apiClient.put(endpoint, mergeOptions);\n  }\n}\n```\n\nImplement validation for pull request data and handle GitHub-specific merge requirements and conflicts.",
+        "testStrategy": "Test pull request creation between branches. Verify listing functionality with different states (open, closed, merged). Test merge operations with various strategies. Validate error handling for conflicts and permission issues.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Code Search Functionality",
+        "description": "Restore the ability to search for code across GitHub repositories through the chat-ai interface",
+        "details": "Implement code search operations:\n1. Search code within repositories\n2. Filter search results\n3. Display code snippets with context\n4. Handle pagination for large result sets\n\nImplementation should include:\n```javascript\nclass GitHubCodeSearchManager {\n  constructor(authManager) {\n    this.authManager = authManager;\n    this.apiClient = new GitHubApiClient(authManager);\n  }\n  \n  async searchCode(query, options = {}) {\n    const endpoint = '/search/code';\n    const params = {\n      q: query,\n      ...options\n    };\n    return this.apiClient.get(endpoint, params);\n  }\n  \n  async getFileContent(owner, repo, path, ref = 'master') {\n    const endpoint = `/repos/${owner}/${repo}/contents/${path}`;\n    return this.apiClient.get(endpoint, { ref });\n  }\n  \n  formatSearchResults(results) {\n    // Format and extract relevant information from search results\n    return results.items.map(item => ({\n      repository: item.repository.full_name,\n      path: item.path,\n      url: item.html_url,\n      matches: this.extractMatches(item)\n    }));\n  }\n  \n  extractMatches(item) {\n    // Extract code matches with context\n  }\n}\n```\n\nImplement proper query building and result formatting. Handle GitHub search API rate limits and pagination.",
+        "testStrategy": "Test search functionality with various queries and filters. Verify result formatting and snippet extraction. Test pagination for large result sets. Validate error handling for rate limiting and invalid queries.",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Error Handling and User Feedback",
+        "description": "Enhance error handling and provide clear user feedback for GitHub operations",
+        "details": "Implement comprehensive error handling:\n1. Create specific error types for different GitHub API errors\n2. Implement user-friendly error messages\n3. Add retry mechanisms for transient errors\n4. Provide actionable feedback for authentication issues\n5. Log detailed error information for debugging\n\nImplementation should include:\n```javascript\nclass GitHubErrorHandler {\n  constructor() {\n    this.errorMap = {\n      401: 'Authentication failed. Please check your GitHub credentials.',\n      403: 'Permission denied. You may not have access to this resource.',\n      404: 'Resource not found. Please check the repository or path.',\n      422: 'Invalid request. Please check your input parameters.',\n      429: 'Rate limit exceeded. Please try again later.',\n      500: 'GitHub server error. Please try again later.',\n      503: 'GitHub service unavailable. Please try again later.'\n    };\n  }\n  \n  handleError(error) {\n    const status = error.response?.status;\n    const message = this.errorMap[status] || 'An unexpected error occurred with GitHub operation.';\n    \n    // Log detailed error for debugging\n    console.error('GitHub API Error:', {\n      status,\n      message: error.message,\n      response: error.response?.data,\n      request: error.config\n    });\n    \n    return {\n      userMessage: message,\n      actionable: this.getActionableSteps(status, error),\n      retryable: this.isRetryable(status)\n    };\n  }\n  \n  getActionableSteps(status, error) {\n    // Return actionable steps based on error type\n  }\n  \n  isRetryable(status) {\n    return [429, 500, 502, 503, 504].includes(status);\n  }\n}\n```\n\nIntegrate error handling into all GitHub operations and ensure consistent user feedback.",
+        "testStrategy": "Test error handling with mocked GitHub API responses for various error scenarios. Verify user messages are clear and actionable. Test retry mechanisms for transient errors. Validate logging for debugging purposes.",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Integration Testing and Performance Optimization",
+        "description": "Perform comprehensive integration testing and optimize performance of GitHub operations",
+        "details": "Implement integration testing and performance optimization:\n1. Create end-to-end test scenarios for GitHub workflows\n2. Measure and optimize API call performance\n3. Implement caching for frequently accessed data\n4. Add request batching where applicable\n5. Validate all success criteria\n\nImplementation should include:\n```javascript\nclass GitHubIntegrationTester {\n  constructor(config) {\n    this.config = config;\n    this.authManager = new GitHubAuthManager(config);\n    this.repoManager = new GitHubRepositoryManager(this.authManager);\n    this.issueManager = new GitHubIssueManager(this.authManager);\n    this.prManager = new GitHubPullRequestManager(this.authManager);\n    this.searchManager = new GitHubCodeSearchManager(this.authManager);\n  }\n  \n  async runIntegrationTests() {\n    const results = {};\n    \n    // Test repository access\n    results.repoAccess = await this.testRepositoryAccess();\n    \n    // Test issue management\n    results.issueManagement = await this.testIssueManagement();\n    \n    // Test pull requests\n    results.pullRequests = await this.testPullRequests();\n    \n    // Test code search\n    results.codeSearch = await this.testCodeSearch();\n    \n    return results;\n  }\n  \n  async testRepositoryAccess() {\n    // Test repository listing and access\n  }\n  \n  async testIssueManagement() {\n    // Test issue CRUD operations\n  }\n  \n  async testPullRequests() {\n    // Test PR operations\n  }\n  \n  async testCodeSearch() {\n    // Test code search functionality\n  }\n  \n  async measurePerformance(operation, iterations = 5) {\n    // Measure operation performance\n  }\n}\n\nclass GitHubCacheManager {\n  constructor(config) {\n    this.cache = new Map();\n    this.ttl = config.cacheTtl || 300000; // 5 minutes default\n  }\n  \n  get(key) {\n    const item = this.cache.get(key);\n    if (!item) return null;\n    \n    if (Date.now() > item.expiry) {\n      this.cache.delete(key);\n      return null;\n    }\n    \n    return item.value;\n  }\n  \n  set(key, value, customTtl) {\n    const expiry = Date.now() + (customTtl || this.ttl);\n    this.cache.set(key, { value, expiry });\n  }\n}\n```\n\nImplement performance benchmarking and optimize critical paths. Add caching for repository listings, user data, and other frequently accessed information.",
+        "testStrategy": "Create comprehensive integration test suite covering all GitHub operations. Measure performance before and after optimizations. Test caching effectiveness with repeated operations. Validate all success criteria defined in the PRD.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Install and Configure MCP Memory Server",
+        "description": "Install and configure the MCP Memory Server from the modelcontextprotocol/servers repository to provide persistent memory using a local knowledge graph for Claude to remember information across chats.",
+        "details": "Implementation steps:\n\n1. Clone the modelcontextprotocol/servers repository:\n```bash\ngit clone https://github.com/modelcontextprotocol/servers.git\ncd servers\n```\n\n2. Install the MCP Memory Server dependencies:\n```bash\ncd memory-server\nnpm install\n```\n\n3. Configure the server settings in a configuration file (config.json):\n```json\n{\n  \"port\": 3001,\n  \"dataPath\": \"./data\",\n  \"logLevel\": \"info\",\n  \"authentication\": {\n    \"enabled\": true,\n    \"apiKey\": \"your-secure-api-key\"\n  },\n  \"knowledgeGraph\": {\n    \"storageType\": \"local\",\n    \"persistenceInterval\": 300\n  }\n}\n```\n\n4. Integrate the Memory Server with the existing MCP configuration:\n```javascript\n// Add to MCP configuration\nconst mcpConfig = {\n  // Existing configuration...\n  \n  memoryServer: {\n    url: \"http://localhost:3001\",\n    apiKey: \"your-secure-api-key\",\n    enabled: true,\n    options: {\n      persistenceEnabled: true,\n      maxMemoryItems: 1000\n    }\n  }\n};\n```\n\n5. Create a service wrapper for the Memory Server:\n```javascript\nclass MCPMemoryService {\n  constructor(config) {\n    this.config = config;\n    this.baseUrl = config.url;\n    this.headers = {\n      'Authorization': `Bearer ${config.apiKey}`,\n      'Content-Type': 'application/json'\n    };\n  }\n  \n  async storeMemory(sessionId, data) {\n    const response = await fetch(`${this.baseUrl}/memory/${sessionId}`, {\n      method: 'POST',\n      headers: this.headers,\n      body: JSON.stringify(data)\n    });\n    return response.json();\n  }\n  \n  async retrieveMemory(sessionId, query = {}) {\n    const queryParams = new URLSearchParams(query).toString();\n    const response = await fetch(`${this.baseUrl}/memory/${sessionId}?${queryParams}`, {\n      method: 'GET',\n      headers: this.headers\n    });\n    return response.json();\n  }\n  \n  async clearMemory(sessionId) {\n    const response = await fetch(`${this.baseUrl}/memory/${sessionId}`, {\n      method: 'DELETE',\n      headers: this.headers\n    });\n    return response.json();\n  }\n}\n```\n\n6. Start the Memory Server:\n```bash\nnpm start\n```\n\n7. Implement a startup script to ensure the Memory Server starts with the main application:\n```javascript\nconst { spawn } = require('child_process');\nconst path = require('path');\n\nfunction startMemoryServer() {\n  const serverPath = path.join(__dirname, 'servers', 'memory-server');\n  const server = spawn('npm', ['start'], { cwd: serverPath });\n  \n  server.stdout.on('data', (data) => {\n    console.log(`Memory Server: ${data}`);\n  });\n  \n  server.stderr.on('data', (data) => {\n    console.error(`Memory Server Error: ${data}`);\n  });\n  \n  server.on('close', (code) => {\n    console.log(`Memory Server exited with code ${code}`);\n    // Restart server if it crashes\n    if (code !== 0) {\n      console.log('Restarting Memory Server...');\n      startMemoryServer();\n    }\n  });\n}\n```\n\n8. Update the application to utilize the Memory Server for persistent context across conversations.",
+        "testStrategy": "1. Unit Testing:\n   - Create unit tests for the MCPMemoryService class\n   - Test each method (storeMemory, retrieveMemory, clearMemory) with mock responses\n   - Verify error handling for network issues and server errors\n\n2. Integration Testing:\n   - Start the Memory Server in test mode\n   - Test the full integration flow from the main application to the Memory Server\n   - Verify data persistence by storing data, restarting the server, and retrieving the data\n   - Test concurrent access patterns with multiple simulated users\n\n3. Functional Testing:\n   - Create a test conversation with Claude\n   - Store specific information in one conversation\n   - Start a new conversation and verify Claude can access the previously stored information\n   - Test information retrieval across different time periods (immediate, after 1 hour, after 1 day)\n\n4. Performance Testing:\n   - Measure response times for memory operations with varying data sizes\n   - Test the system under load with multiple concurrent users\n   - Verify memory usage remains within acceptable limits during extended operation\n\n5. Security Testing:\n   - Verify API key authentication is working correctly\n   - Test with invalid API keys to ensure proper rejection\n   - Check for proper data isolation between different user sessions\n\n6. Regression Testing:\n   - Ensure existing chat functionality continues to work with the Memory Server enabled\n   - Verify no performance degradation in the main application\n\n7. Documentation:\n   - Document the installation and configuration process\n   - Create API documentation for the Memory Server endpoints\n   - Add troubleshooting guides for common issues",
+        "status": "done",
+        "dependencies": [
+          2
+        ],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Clone Repository and Install Dependencies",
+            "description": "Clone the modelcontextprotocol/servers repository and install the MCP Memory Server dependencies",
+            "dependencies": [],
+            "details": "1. Clone the repository using git: `git clone https://github.com/modelcontextprotocol/servers.git`\n2. Navigate to the servers directory: `cd servers`\n3. Enter the memory-server directory: `cd memory-server`\n4. Install all required dependencies: `npm install`\n5. Verify installation by checking for the node_modules directory and package-lock.json file\n<info added on 2025-09-03T04:27:51.452Z>\nThe MCP Memory Server can be installed more easily using npm:\n\n1. Install directly using npx without repository cloning:\n   ```\n   npx -y @modelcontextprotocol/server-memory\n   ```\n\n2. Package details:\n   - Package name: @modelcontextprotocol/server-memory\n   - Current version: 0.6.3\n\n3. Configuration options:\n   - Set custom storage location with environment variable: MEMORY_FILE_PATH\n   - Example: `MEMORY_FILE_PATH=/path/to/storage npx -y @modelcontextprotocol/server-memory`\n\n4. The server provides persistent memory using a local knowledge graph and is designed to work with Claude Desktop and other MCP clients.\n\n5. No complex setup required - it's a simple, standalone MCP server that can be run with a single command.\n</info added on 2025-09-03T04:27:51.452Z>",
+            "status": "done",
+            "testStrategy": "Verify successful cloning by checking the directory structure. Confirm all dependencies are installed correctly by running `npm list` and checking for any error messages. Test basic functionality by running a simple server check command."
+          },
+          {
+            "id": 2,
+            "title": "Configure Memory Server Settings",
+            "description": "Create and configure the config.json file with appropriate settings for the Memory Server",
+            "dependencies": [
+              "9.1"
+            ],
+            "details": "1. Create a config.json file in the memory-server directory\n2. Configure the following settings:\n   - Set port to 3001\n   - Set dataPath to './data'\n   - Set logLevel to 'info'\n   - Enable authentication and create a secure API key\n   - Configure knowledgeGraph with local storage type\n   - Set appropriate persistenceInterval (300 seconds)\n3. Ensure the data directory exists and has proper permissions\n<info added on 2025-09-03T04:32:00.420Z>\n4. Configuration completed successfully! The MCP Memory Server has been added to the .cursor/mcp.json configuration file with the following settings:\n   - Server name: \"memory\"\n   - Command: npx -y @modelcontextprotocol/server-memory\n   - Memory storage path: /Users/harrysayers/.cursor/memory.json\n\n5. The server is now configured to run automatically when Cursor starts and will provide persistent memory functionality through a local knowledge graph.\n\n6. Memory data will be stored in the specified JSON file for persistence across sessions.\n</info added on 2025-09-03T04:32:00.420Z>",
+            "status": "done",
+            "testStrategy": "Validate the config.json file against the schema requirements. Test with both valid and invalid configurations to ensure proper error handling. Verify the server can read and apply all configuration options correctly."
+          },
+          {
+            "id": 3,
+            "title": "Integrate Memory Server with MCP Configuration",
+            "description": "Update the MCP configuration to include the Memory Server settings and create the service wrapper",
+            "dependencies": [
+              "9.2"
+            ],
+            "details": "1. Add the memoryServer section to the existing MCP configuration\n2. Configure the URL, API key, and enable the memory server\n3. Set appropriate options for persistence and maximum memory items\n4. Implement the MCPMemoryService class with methods for:\n   - storeMemory: Store data in the memory server\n   - retrieveMemory: Retrieve data from the memory server\n   - clearMemory: Delete data from the memory server\n5. Ensure proper error handling and response processing\n<info added on 2025-09-03T04:32:10.197Z>\nThis subtask is not needed for the MCP Memory Server installation. The memory server is a standalone MCP server that doesn't require custom integration code. It works directly with MCP clients like Cursor through the standard MCP protocol. The server provides tools for creating entities, relations, and observations in a knowledge graph, and these are automatically available to MCP clients when the server is running.\n</info added on 2025-09-03T04:32:10.197Z>",
+            "status": "done",
+            "testStrategy": "Create unit tests for the MCPMemoryService class. Test each method with mock responses. Verify error handling for network issues and server errors. Test integration with the MCP configuration system."
+          },
+          {
+            "id": 4,
+            "title": "Create Startup and Management Scripts",
+            "description": "Implement scripts to start, monitor, and automatically restart the Memory Server",
+            "dependencies": [
+              "9.2",
+              "9.3"
+            ],
+            "details": "1. Create a startup script that launches the Memory Server using child_process\n2. Implement stdout and stderr handlers to capture and log server output\n3. Add automatic restart functionality if the server crashes\n4. Create a shutdown handler to gracefully stop the server\n5. Implement a health check mechanism to monitor server status\n6. Ensure the script can be integrated with the main application startup process",
+            "status": "done",
+            "testStrategy": "Test the startup script with various scenarios including normal startup, crash recovery, and graceful shutdown. Verify logs are captured correctly. Test the health check mechanism to ensure it accurately reports server status."
+          },
+          {
+            "id": 5,
+            "title": "Implement Application Integration for Persistent Context",
+            "description": "Update the application to utilize the Memory Server for maintaining context across conversations",
+            "dependencies": [
+              "9.3",
+              "9.4"
+            ],
+            "details": "1. Modify the conversation handler to store context in the Memory Server\n2. Implement session management to track conversations\n3. Create functions to retrieve relevant context for new messages\n4. Add mechanisms to prioritize and manage memory entries\n5. Implement context pruning for long conversations\n6. Add user controls for managing their conversation memory\n7. Create documentation for the memory persistence features",
+            "status": "done",
+            "testStrategy": "Test conversation persistence across multiple sessions. Verify context retrieval works correctly with various query types. Test memory management features including pruning and user controls. Conduct end-to-end tests with realistic conversation scenarios."
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-03T02:14:12.886Z",
+      "updated": "2025-09-03T04:32:14.648Z",
+      "description": "Tasks for master context"
+    }
+  },
+  "ssot-database": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Set up Supabase Project and Core Infrastructure",
+        "description": "Initialize the Supabase project with proper configuration and set up the core infrastructure needed for the SSoT database.",
+        "details": "1. Create a new Supabase project using the latest version (currently 2.38.0+)\n2. Configure project settings including region selection optimized for your primary development team location\n3. Set up project API keys (anon and service role) with proper security practices\n4. Configure database settings including timezone (UTC recommended)\n5. Enable necessary extensions: pgcrypto, uuid-ossp, pg_jsonb, etc.\n6. Set up initial backup policies\n7. Configure CORS settings to allow access from development environments\n8. Set up initial logging and monitoring\n9. Document the project setup process for team reference\n\nImplementation notes:\n- Use Supabase CLI (version 1.64.0+) for infrastructure-as-code approach\n- Create a `supabase/config.toml` file for project configuration\n- Consider setting up GitHub Actions for automated deployments",
+        "testStrategy": "1. Verify project creation and access using Supabase dashboard\n2. Test API connectivity using Postman or similar tool\n3. Validate that all required extensions are enabled\n4. Confirm backup policies are correctly configured\n5. Verify CORS settings by making test requests from development environment",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Design and Implement Core Database Schema",
+        "description": "Design and implement the foundational database schema including tables for projects, templates, configurations, and their relationships.",
+        "details": "Create the following tables with appropriate relationships:\n\n1. `projects` table:\n   - id: uuid PRIMARY KEY\n   - name: text NOT NULL\n   - description: text\n   - tech_stack: jsonb\n   - created_at: timestamptz DEFAULT now()\n   - updated_at: timestamptz DEFAULT now()\n   - version: text\n   - status: text\n\n2. `templates` table:\n   - id: uuid PRIMARY KEY\n   - name: text NOT NULL\n   - category: text NOT NULL (e.g., 'project', 'config', 'docker', 'ci-cd')\n   - content: jsonb NOT NULL\n   - description: text\n   - created_at: timestamptz DEFAULT now()\n   - updated_at: timestamptz DEFAULT now()\n   - version: text\n\n3. `configurations` table:\n   - id: uuid PRIMARY KEY\n   - name: text NOT NULL\n   - type: text NOT NULL (e.g., 'env', 'package.json', 'docker')\n   - content: jsonb NOT NULL\n   - description: text\n   - project_id: uuid REFERENCES projects(id)\n   - created_at: timestamptz DEFAULT now()\n   - updated_at: timestamptz DEFAULT now()\n\n4. `servers` table:\n   - id: uuid PRIMARY KEY\n   - hostname: text NOT NULL\n   - region: text\n   - environment: text NOT NULL (e.g., 'dev', 'staging', 'prod')\n   - details: jsonb\n   - created_at: timestamptz DEFAULT now()\n   - updated_at: timestamptz DEFAULT now()\n\n5. `project_relationships` table:\n   - id: uuid PRIMARY KEY\n   - source_project_id: uuid REFERENCES projects(id)\n   - target_project_id: uuid REFERENCES projects(id)\n   - relationship_type: text NOT NULL (e.g., 'depends-on', 'parent-of')\n   - details: jsonb\n   - created_at: timestamptz DEFAULT now()\n\nImplement appropriate indexes for performance:\n- Create indexes on frequently queried columns\n- Add GIN indexes for jsonb fields that will be queried\n\nSet up triggers for updated_at timestamps and audit logging.",
+        "testStrategy": "1. Verify schema creation with SQL queries\n2. Test relationships with sample data insertion\n3. Validate constraints and foreign keys\n4. Test indexes with EXPLAIN ANALYZE on common queries\n5. Verify triggers function correctly by updating records and checking timestamp changes",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Row Level Security (RLS) Policies",
+        "description": "Configure Row Level Security policies to ensure proper access control for different user roles and protect data integrity.",
+        "details": "1. Enable Row Level Security on all tables\n2. Create the following roles and policies:\n\n- Admin role: Full access to all tables\n- Developer role: Read access to all tables, write access to configurations and templates\n- Viewer role: Read-only access to all tables\n- AI Service role: Read access to templates, configurations, and project metadata\n\nFor each table, implement these RLS policies:\n\n```sql\n-- Example for projects table\nALTER TABLE projects ENABLE ROW LEVEL SECURITY;\n\n-- Admin policy\nCREATE POLICY admin_all_projects ON projects\n  FOR ALL\n  TO authenticated\n  USING (auth.jwt() ->> 'role' = 'admin');\n\n-- Developer read policy\nCREATE POLICY dev_read_projects ON projects\n  FOR SELECT\n  TO authenticated\n  USING (auth.jwt() ->> 'role' = 'developer');\n\n-- Developer write policy for specific tables\nCREATE POLICY dev_write_configurations ON configurations\n  FOR INSERT\n  TO authenticated\n  WITH CHECK (auth.jwt() ->> 'role' = 'developer');\n\n-- AI Service policy\nCREATE POLICY ai_read_templates ON templates\n  FOR SELECT\n  TO authenticated\n  USING (auth.jwt() ->> 'role' = 'ai_service');\n```\n\nImplement similar policies for all tables. Use Supabase's auth.jwt() function to access role information from the JWT token.\n\nCreate helper functions for common permission checks that can be reused across policies.",
+        "testStrategy": "1. Create test users with different roles\n2. Attempt CRUD operations with each role and verify access is granted/denied appropriately\n3. Test edge cases like users with multiple roles\n4. Verify AI service access works correctly\n5. Test with actual JWT tokens to ensure policy evaluation works as expected",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Create Project Templates and Configuration Storage",
+        "description": "Develop the system for storing and managing project templates, configuration files, and development standards that will serve as the foundation for new projects.",
+        "details": "1. Create a structured approach for storing templates in the database:\n\n- Project templates for common frameworks:\n  - React (latest v18.x) with TypeScript\n  - Node.js (v18+) Express API\n  - Python FastAPI\n  - Next.js (v13+) full-stack application\n\n- Configuration templates:\n  - .env templates with placeholder variables\n  - package.json with recommended dependencies and scripts\n  - tsconfig.json with best practices\n  - ESLint and Prettier configurations\n  - Jest/Vitest test configurations\n\n- Docker configurations:\n  - Development Dockerfiles\n  - Production multi-stage build Dockerfiles\n  - docker-compose.yml templates\n\n- CI/CD templates:\n  - GitHub Actions workflows\n  - GitLab CI configurations\n  - CircleCI configurations\n\n2. Implement versioning for templates:\n   - Add version field to track template changes\n   - Store previous versions for reference\n   - Add metadata about when and why templates were updated\n\n3. Create a tagging system for templates to facilitate search and filtering\n\n4. Develop a validation system to ensure templates are properly formatted\n\n5. Implement a template rendering system that can replace placeholders with actual values\n\nExample template structure in JSONB:\n```json\n{\n  \"name\": \"React TypeScript App\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Modern React application with TypeScript\",\n  \"files\": [\n    {\n      \"path\": \"package.json\",\n      \"content\": \"{ \\\"name\\\": \\\"{{projectName}}\\\", \\\"version\\\": \\\"0.1.0\\\", ... }\"\n    },\n    {\n      \"path\": \"tsconfig.json\",\n      \"content\": \"{ \\\"compilerOptions\\\": { ... } }\"\n    },\n    ...\n  ],\n  \"instructions\": \"Run npm install and then npm start to begin development.\",\n  \"dependencies\": [\"react@18.2.0\", \"typescript@5.0.4\", ...],\n  \"devDependencies\": [\"eslint@8.38.0\", \"prettier@2.8.7\", ...]\n}\n```",
+        "testStrategy": "1. Validate template JSON structure against schema\n2. Test template rendering with various placeholder values\n3. Verify all template files are valid (e.g., valid JSON, YAML, etc.)\n4. Test versioning by creating and retrieving different versions\n5. Verify search and filtering functionality works with tags\n6. Test actual project creation from templates to ensure they work correctly",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Infrastructure and Server Management Module",
+        "description": "Develop the module for storing and managing server details, API endpoints, and infrastructure configurations.",
+        "details": "1. Extend the database schema to support detailed infrastructure information:\n\n```sql\n-- Add additional fields to servers table if needed\nALTER TABLE servers ADD COLUMN server_type TEXT;\nALTER TABLE servers ADD COLUMN capacity JSONB;\n\n-- Create API endpoints table\nCREATE TABLE api_endpoints (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  url TEXT NOT NULL,\n  method TEXT NOT NULL,\n  description TEXT,\n  server_id UUID REFERENCES servers(id),\n  request_schema JSONB,\n  response_schema JSONB,\n  headers JSONB,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create load balancer configuration table\nCREATE TABLE load_balancers (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  type TEXT NOT NULL,\n  configuration JSONB NOT NULL,\n  server_ids JSONB, -- Array of server IDs\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create CDN configuration table\nCREATE TABLE cdn_configurations (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  provider TEXT NOT NULL,\n  configuration JSONB NOT NULL,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n```\n\n2. Implement functions to manage infrastructure relationships:\n   - Server to API endpoint mappings\n   - Load balancer to server mappings\n   - Environment-specific configurations\n\n3. Create helper functions for common infrastructure operations:\n   - Get all endpoints for a specific server\n   - Get all servers in a specific environment\n   - Get load balancer configuration for a set of servers\n\n4. Implement validation for infrastructure data:\n   - URL format validation\n   - JSON schema validation for configuration objects\n   - Relationship integrity checks\n\n5. Add support for environment-specific configurations (dev, staging, prod)\n\n6. Create visualization helpers for infrastructure relationships",
+        "testStrategy": "1. Test CRUD operations for all infrastructure entities\n2. Validate relationship integrity with test data\n3. Test helper functions with various scenarios\n4. Verify validation functions correctly identify invalid data\n5. Test environment-specific configuration retrieval\n6. Simulate real-world infrastructure setups to ensure the model can represent them accurately",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Develop Development Environment Configuration Module",
+        "description": "Create the system for storing and managing development tool configurations, IDE settings, linting rules, and build tool configurations.",
+        "details": "1. Extend the database schema to support development environment configurations:\n\n```sql\n-- Create dev tools table\nCREATE TABLE dev_tools (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  type TEXT NOT NULL,\n  version TEXT,\n  configuration JSONB NOT NULL,\n  description TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create IDE settings table\nCREATE TABLE ide_settings (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  ide_name TEXT NOT NULL,\n  version TEXT,\n  settings JSONB NOT NULL,\n  extensions JSONB,\n  description TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create linting rules table\nCREATE TABLE linting_rules (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  tool TEXT NOT NULL,\n  rules JSONB NOT NULL,\n  description TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n```\n\n2. Populate the database with common development configurations:\n   - VS Code settings and recommended extensions\n   - JetBrains IDE settings\n   - ESLint configurations for different project types\n   - Prettier configurations\n   - TypeScript compiler options\n   - Jest/Vitest test configurations\n   - Webpack/Vite/other build tool configurations\n\n3. Create helper functions to generate configuration files from stored settings:\n   - Generate .vscode/settings.json\n   - Generate .eslintrc.js or .eslintrc.json\n   - Generate .prettierrc\n   - Generate webpack.config.js or vite.config.js\n\n4. Implement a system to track configuration compatibility:\n   - Track which configurations work well together\n   - Track version compatibility\n   - Document known issues or conflicts\n\n5. Create a recommendation system that suggests configurations based on project type",
+        "testStrategy": "1. Validate all configuration JSON against their respective schemas\n2. Test configuration file generation with various settings\n3. Verify compatibility tracking with test configurations\n4. Test recommendation system with different project types\n5. Validate that generated configuration files work in actual development environments\n6. Test with the latest versions of development tools to ensure configurations are up-to-date",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement API and Integration Management System",
+        "description": "Develop the system for storing API documentation, schemas, third-party service configurations, and integration patterns.",
+        "details": "1. Extend the database schema to support API and integration management:\n\n```sql\n-- Create API documentation table\nCREATE TABLE api_documentation (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  version TEXT,\n  spec_format TEXT NOT NULL, -- 'openapi', 'swagger', 'graphql', etc.\n  spec_content JSONB NOT NULL,\n  description TEXT,\n  project_id UUID REFERENCES projects(id),\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create third-party services table\nCREATE TABLE third_party_services (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  service_type TEXT NOT NULL,\n  configuration JSONB NOT NULL, -- Non-sensitive configuration\n  documentation_url TEXT,\n  description TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create webhook configurations table\nCREATE TABLE webhook_configurations (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  endpoint TEXT NOT NULL,\n  event_type TEXT NOT NULL,\n  payload_schema JSONB,\n  headers JSONB,\n  description TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create integration patterns table\nCREATE TABLE integration_patterns (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  pattern_type TEXT NOT NULL,\n  description TEXT,\n  implementation_details JSONB NOT NULL,\n  example_code TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n```\n\n2. Implement OpenAPI/Swagger specification storage and validation\n   - Store complete API specifications\n   - Validate specifications against OpenAPI standards\n   - Generate documentation from specifications\n\n3. Create a system for managing API versioning and changes\n   - Track API changes between versions\n   - Document breaking vs. non-breaking changes\n   - Generate migration guides\n\n4. Implement a pattern library for common integration scenarios:\n   - Authentication patterns (OAuth, API keys, JWT)\n   - Webhook implementation patterns\n   - Error handling and retry strategies\n   - Rate limiting and backoff strategies\n\n5. Create helper functions for generating client code from API specifications\n   - Generate TypeScript/JavaScript client code\n   - Generate Python client code\n   - Generate API request examples\n\n6. Implement a system to track dependencies between APIs and services",
+        "testStrategy": "1. Validate OpenAPI specifications against the official schema\n2. Test API client code generation with sample specifications\n3. Verify webhook payload validation against schemas\n4. Test integration pattern examples with mock services\n5. Validate version tracking and migration guide generation\n6. Test dependency tracking between different APIs and services",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Develop Project Metadata and Relationship Management",
+        "description": "Implement the system for tracking project metadata, relationships between projects, version information, and team assignments.",
+        "details": "1. Enhance the projects and project_relationships tables with additional fields:\n\n```sql\n-- Add fields to projects table\nALTER TABLE projects ADD COLUMN repository_url TEXT;\nALTER TABLE projects ADD COLUMN documentation_url TEXT;\nALTER TABLE projects ADD COLUMN team_id UUID;\nALTER TABLE projects ADD COLUMN release_notes JSONB;\n\n-- Create teams table\nCREATE TABLE teams (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  name TEXT NOT NULL,\n  description TEXT,\n  members JSONB, -- Array of member objects with roles\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Add more relationship types to project_relationships\nALTER TABLE project_relationships ADD CONSTRAINT valid_relationship_type \n  CHECK (relationship_type IN ('depends-on', 'parent-of', 'extends', 'uses-api-of', 'shares-database-with', 'communicates-with'));\n```\n\n2. Implement visualization tools for project relationships:\n   - Generate dependency graphs\n   - Create visual representations of project hierarchies\n   - Show communication patterns between projects\n\n3. Create a version management system:\n   - Track semantic versioning for projects\n   - Store release notes and changelogs\n   - Track dependencies between specific versions\n\n4. Implement team and responsibility tracking:\n   - Assign teams to projects\n   - Track individual responsibilities\n   - Document on-call rotations and support responsibilities\n\n5. Create a project health dashboard:\n   - Track project status (active, maintenance, deprecated)\n   - Monitor dependency freshness\n   - Track technical debt indicators\n\n6. Implement project documentation management:\n   - Store links to documentation\n   - Track documentation completeness\n   - Generate basic documentation from metadata",
+        "testStrategy": "1. Test relationship creation and validation between projects\n2. Verify dependency graph generation with complex project relationships\n3. Test version management with sample release data\n4. Validate team assignment and responsibility tracking\n5. Test project health indicators with various scenarios\n6. Verify documentation management and generation",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Development Standards and Best Practices Repository",
+        "description": "Create a system for storing, managing, and distributing development standards, coding conventions, security practices, and performance guidelines.",
+        "details": "1. Extend the database schema to support development standards:\n\n```sql\n-- Create standards table\nCREATE TABLE development_standards (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  title TEXT NOT NULL,\n  category TEXT NOT NULL,\n  content TEXT NOT NULL,\n  version TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create coding conventions table\nCREATE TABLE coding_conventions (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  language TEXT NOT NULL,\n  framework TEXT,\n  conventions JSONB NOT NULL,\n  examples TEXT,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n\n-- Create security practices table\nCREATE TABLE security_practices (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  title TEXT NOT NULL,\n  risk_level TEXT NOT NULL,\n  description TEXT NOT NULL,\n  mitigation_steps JSONB NOT NULL,\n  references JSONB,\n  created_at TIMESTAMPTZ DEFAULT now(),\n  updated_at TIMESTAMPTZ DEFAULT now()\n);\n```\n\n2. Populate the database with development standards:\n   - Coding style guides for different languages\n   - Security best practices based on OWASP guidelines\n   - Performance optimization techniques\n   - Accessibility standards (WCAG 2.1)\n   - Code review checklists\n\n3. Implement a system for linking standards to projects:\n   - Associate specific standards with project types\n   - Track compliance with standards\n   - Generate reports on standards adoption\n\n4. Create templates for common development processes:\n   - Code review process\n   - Testing requirements\n   - Documentation requirements\n   - Deployment checklists\n\n5. Implement a knowledge sharing system:\n   - Allow commenting and discussion on standards\n   - Track changes and updates to standards\n   - Support for markdown formatting and code examples\n\n6. Create a recommendation engine that suggests relevant standards based on project characteristics",
+        "testStrategy": "1. Validate standards content formatting and structure\n2. Test linking of standards to projects\n3. Verify compliance tracking with sample project data\n4. Test process templates with real-world scenarios\n5. Validate knowledge sharing features with sample discussions\n6. Test recommendation engine with various project types",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Develop REST API for Programmatic Access",
+        "description": "Create a comprehensive REST API using Supabase Edge Functions to allow programmatic access to the SSoT database for external systems.",
+        "details": "1. Design and implement RESTful API endpoints using Supabase Edge Functions (Deno runtime):\n\n```typescript\n// Example Edge Function for fetching project templates\nimport { serve } from 'https://deno.land/std@0.177.0/http/server.ts'\nimport { createClient } from 'https://esm.sh/@supabase/supabase-js@2.22.0'\n\nserve(async (req) => {\n  const supabase = createClient(\n    Deno.env.get('SUPABASE_URL') ?? '',\n    Deno.env.get('SUPABASE_ANON_KEY') ?? ''\n  )\n  \n  const { data, error } = await supabase\n    .from('templates')\n    .select('*')\n    .eq('category', 'project')\n  \n  if (error) {\n    return new Response(JSON.stringify({ error: error.message }), {\n      headers: { 'Content-Type': 'application/json' },\n      status: 400\n    })\n  }\n  \n  return new Response(JSON.stringify({ data }), {\n    headers: { 'Content-Type': 'application/json' }\n  })\n})\n```\n\n2. Create the following API endpoints:\n   - `/api/projects` - CRUD operations for projects\n   - `/api/templates` - Retrieve and manage templates\n   - `/api/configurations` - Access configuration data\n   - `/api/standards` - Access development standards\n   - `/api/infrastructure` - Manage infrastructure data\n\n3. Implement filtering, pagination, and search capabilities:\n   - Support query parameters for filtering\n   - Implement cursor-based pagination\n   - Add full-text search capabilities\n\n4. Create specialized endpoints for common operations:\n   - `/api/templates/generate` - Generate project from template\n   - `/api/projects/relationships` - Get project dependency graph\n   - `/api/standards/applicable` - Get standards for a project type\n\n5. Implement proper authentication and authorization:\n   - Use Supabase Auth for JWT-based authentication\n   - Implement role-based access control\n   - Add rate limiting for API endpoints\n\n6. Create comprehensive API documentation:\n   - Generate OpenAPI specification\n   - Create usage examples\n   - Document authentication requirements",
+        "testStrategy": "1. Test all API endpoints with various request parameters\n2. Verify authentication and authorization with different user roles\n3. Test pagination and filtering with large datasets\n4. Validate error handling and response formats\n5. Test rate limiting functionality\n6. Verify that the API documentation matches the implementation\n7. Perform load testing to ensure performance under heavy usage",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Export/Import Functionality",
+        "description": "Develop functionality to export and import configurations, templates, and other data to facilitate version control integration and data portability.",
+        "details": "1. Create export functionality for all major data types:\n\n```typescript\n// Example Edge Function for exporting templates\nimport { serve } from 'https://deno.land/std@0.177.0/http/server.ts'\nimport { createClient } from 'https://esm.sh/@supabase/supabase-js@2.22.0'\n\nserve(async (req) => {\n  const supabase = createClient(\n    Deno.env.get('SUPABASE_URL') ?? '',\n    Deno.env.get('SUPABASE_ANON_KEY') ?? ''\n  )\n  \n  const url = new URL(req.url)\n  const category = url.searchParams.get('category')\n  \n  let query = supabase.from('templates').select('*')\n  if (category) {\n    query = query.eq('category', category)\n  }\n  \n  const { data, error } = await query\n  \n  if (error) {\n    return new Response(JSON.stringify({ error: error.message }), {\n      headers: { 'Content-Type': 'application/json' },\n      status: 400\n    })\n  }\n  \n  // Format for file export\n  const exportData = {\n    metadata: {\n      exported_at: new Date().toISOString(),\n      version: '1.0.0',\n      type: 'templates'\n    },\n    data: data\n  }\n  \n  return new Response(JSON.stringify(exportData, null, 2), {\n    headers: {\n      'Content-Type': 'application/json',\n      'Content-Disposition': `attachment; filename=\"templates-${new Date().toISOString()}.json\"`\n    }\n  })\n})\n```\n\n2. Implement import functionality with validation:\n   - Validate imported data against schema\n   - Handle conflicts with existing data\n   - Support partial imports\n\n3. Create Git integration for template management:\n   - Export templates to Git repository\n   - Import templates from Git repository\n   - Track changes between versions\n\n4. Implement batch operations:\n   - Bulk export of related data\n   - Bulk import with dependency resolution\n   - Transaction support for atomic operations\n\n5. Create data migration tools:\n   - Support for schema evolution\n   - Data transformation during import/export\n   - Version compatibility checking\n\n6. Implement scheduled exports:\n   - Automated backups to external storage\n   - Configurable export schedules\n   - Export notifications",
+        "testStrategy": "1. Test export functionality for all data types\n2. Verify import validation with valid and invalid data\n3. Test Git integration with sample repositories\n4. Validate batch operations with large datasets\n5. Test data migration with schema changes\n6. Verify scheduled exports work correctly\n7. Test conflict resolution during imports",
+        "priority": "medium",
+        "dependencies": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Integrate with Cursor AI via MCP Server",
+        "description": "Develop the integration between the SSoT database and Cursor AI through the MCP server to enable AI-assisted project creation and configuration.",
+        "details": "1. Design and implement the MCP server integration API:\n\n```typescript\n// Example Edge Function for MCP server integration\nimport { serve } from 'https://deno.land/std@0.177.0/http/server.ts'\nimport { createClient } from 'https://esm.sh/@supabase/supabase-js@2.22.0'\n\nserve(async (req) => {\n  // Verify MCP server authentication\n  const authHeader = req.headers.get('Authorization')\n  if (!authHeader || !verifyMcpAuth(authHeader)) {\n    return new Response(JSON.stringify({ error: 'Unauthorized' }), {\n      headers: { 'Content-Type': 'application/json' },\n      status: 401\n    })\n  }\n  \n  const supabase = createClient(\n    Deno.env.get('SUPABASE_URL') ?? '',\n    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''\n  )\n  \n  // Parse request body\n  const { action, projectType, parameters } = await req.json()\n  \n  // Handle different actions\n  switch (action) {\n    case 'getTemplates':\n      return handleGetTemplates(supabase, projectType)\n    case 'getConfigurations':\n      return handleGetConfigurations(supabase, parameters)\n    case 'getStandards':\n      return handleGetStandards(supabase, projectType)\n    case 'generateProject':\n      return handleGenerateProject(supabase, projectType, parameters)\n    default:\n      return new Response(JSON.stringify({ error: 'Invalid action' }), {\n        headers: { 'Content-Type': 'application/json' },\n        status: 400\n      })\n  }\n})\n\n// Helper functions for different actions\nasync function handleGetTemplates(supabase, projectType) {\n  const { data, error } = await supabase\n    .from('templates')\n    .select('*')\n    .eq('category', 'project')\n    .ilike('name', `%${projectType}%`)\n  \n  if (error) {\n    return new Response(JSON.stringify({ error: error.message }), {\n      headers: { 'Content-Type': 'application/json' },\n      status: 400\n    })\n  }\n  \n  return new Response(JSON.stringify({ data }), {\n    headers: { 'Content-Type': 'application/json' }\n  })\n}\n\n// Implement other handler functions...\n```\n\n2. Create specialized endpoints for Cursor AI:\n   - `/api/cursor/templates` - Get templates suitable for Cursor AI\n   - `/api/cursor/generate` - Generate project based on AI requirements\n   - `/api/cursor/standards` - Get relevant standards for AI-generated code\n\n3. Implement context-aware template suggestions:\n   - Analyze project requirements from Cursor AI\n   - Suggest appropriate templates and configurations\n   - Provide relevant code snippets and examples\n\n4. Create a feedback loop for AI-generated projects:\n   - Track which templates are used by AI\n   - Collect feedback on template effectiveness\n   - Improve templates based on usage patterns\n\n5. Implement secure authentication between MCP server and Supabase:\n   - Use service role key with restricted permissions\n   - Implement request signing and verification\n   - Add rate limiting and monitoring\n\n6. Create comprehensive logging for AI interactions:\n   - Log template usage\n   - Track generated project characteristics\n   - Monitor performance and response times",
+        "testStrategy": "1. Test MCP server integration with mock requests\n2. Verify authentication and authorization mechanisms\n3. Test template suggestion algorithm with various project requirements\n4. Validate project generation with different parameters\n5. Test feedback collection and processing\n6. Verify logging and monitoring functionality\n7. Perform integration testing with the actual MCP server",
+        "priority": "high",
+        "dependencies": [
+          2,
+          3,
+          4,
+          10
+        ],
+        "status": "done",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-03T05:11:40.099Z",
+      "updated": "2025-09-03T05:52:20.883Z",
+      "description": "Tasks for ssot-database context"
+    }
+  }
+}
