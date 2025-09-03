@@ -1,0 +1,69 @@
+{
+  "name": "fastmcp-1",
+  "version": "1.0.0",
+  "description": "GitOps + Supabase MCP Integration Project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm run dev:supabase & npm run dev:docs",
+    "dev:supabase": "supabase start",
+    "dev:docs": "npm run generate:docs && npm run serve:docs",
+    "build": "npm run generate:types && npm run generate:docs",
+    "test": "npm run test:db && npm run test:mcp && npm run test:security",
+    "test:db": "supabase db diff --schema public",
+    "test:mcp": "node scripts/test-mcp.js",
+    "test:security": "npm run security:audit",
+    "test:supabase-mcp": "node scripts/test-supabase-mcp.js",
+    "test:github-mcp": "node scripts/test-github-mcp.js",
+    "test:db-connection": "node scripts/test-db-connection.js",
+    "test:migrations": "supabase db diff",
+    "test:rls": "node scripts/test-rls.js",
+    "test:supabase-tools": "node scripts/test-supabase-tools.js",
+    "test:github-tools": "node scripts/test-github-tools.js",
+    "security:audit": "node scripts/security-audit.js",
+    "security:check": "node scripts/security-check.js",
+    "generate:types": "supabase gen types typescript --local > src/types/database.types.ts",
+    "generate:docs": "node scripts/generate-docs.js",
+    "update:readme": "node scripts/update-readme.js",
+    "docs:verify": "node scripts/verify-docs.js",
+    "create:migration": "node scripts/create-migration.js",
+    "logs:mcp": "tail -f logs/mcp.log",
+    "restart:mcp": "node scripts/restart-mcp.js",
+    "setup": "npm install && npm run setup:env && npm run setup:supabase",
+    "setup:env": "cp .env.example .env && echo 'Please edit .env with your credentials'",
+    "setup:supabase": "supabase start && supabase db push",
+    "clean": "rm -rf node_modules package-lock.json && npm install",
+    "reset": "supabase db reset && npm run setup:supabase"
+  },
+  "keywords": [
+    "fastmcp",
+    "supabase",
+    "gitops",
+    "mcp",
+    "database",
+    "automation"
+  ],
+  "author": "Harry Sayers",
+  "license": "MIT",
+  "devDependencies": {
+    "@supabase/cli": "^1.200.3",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.3.1",
+    "fastmcp": "^2.12.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harrysayers7/fastmcp-1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/harrysayers7/fastmcp-1/issues"
+  },
+  "homepage": "https://github.com/harrysayers7/fastmcp-1#readme"
+}

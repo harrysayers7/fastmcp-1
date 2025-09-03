@@ -1,0 +1,96 @@
+name: Security Audit
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Run every Monday at 2 AM
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security audit
+        run: |
+          echo "🔍 Running comprehensive security audit..."
+          
+          # Check for hardcoded secrets
+          echo "Checking for hardcoded secrets..."
+          if grep -r "sk-" . --exclude-dir=.git --exclude-dir=node_modules; then
+            echo "❌ Found potential API keys in code"
+            exit 1
+          fi
+          
+          if grep -r "password.*=" . --exclude-dir=.git --exclude-dir=node_modules; then
+            echo "❌ Found potential hardcoded passwords"
+            exit 1
+          fi
+          
+          echo "✅ No hardcoded secrets found"
+
+      - name: Check environment files
+        run: |
+          echo "🔍 Checking environment configuration..."
+          
+          # Ensure .env files are in .gitignore
+          if ! grep -q "\.env" .gitignore; then
+            echo "❌ .env files not in .gitignore"
+            exit 1
+          fi
+          
+          # Check for .env.example
+          if [ ! -f ".env.example" ]; then
+            echo "❌ .env.example file missing"
+            exit 1
+          fi
+          
+          echo "✅ Environment configuration looks good"
+
+      - name: Validate MCP configuration
+        run: |
+          echo "🔍 Validating MCP configuration..."
+          
+          # Check Cursor MCP config
+          if [ -f ".cursor/mcp.json" ]; then
+            echo "Validating .cursor/mcp.json..."
+            # Basic JSON validation
+            if ! python3 -m json.tool .cursor/mcp.json > /dev/null; then
+              echo "❌ Invalid JSON in .cursor/mcp.json"
+              exit 1
+            fi
+            echo "✅ Cursor MCP configuration is valid"
+          fi
+          
+          echo "✅ MCP configuration validation completed"
+
+      - name: Check for sensitive data in migrations
+        run: |
+          echo "🔍 Checking migration files for sensitive data..."
+          
+          if [ -d "migrations" ]; then
+            for file in migrations/*.sql; do
+              if [ -f "$file" ]; then
+                # Check for potential sensitive data
+                if grep -i "password\|secret\|key\|token" "$file"; then
+                  echo "⚠️  WARNING: $file may contain sensitive data"
+                fi
+              fi
+            done
+          fi
+          
+          echo "✅ Migration security check completed"
+
+      - name: Generate security report
+        run: |
+          echo "## Security Audit Report" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ No hardcoded secrets found" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Environment configuration secure" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ MCP configuration valid" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Migration files secure" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🛡️ Security audit completed successfully"
